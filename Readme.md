@@ -6,12 +6,32 @@ To understand docker we need to deep dive into the docker engine and its modular
 ## Tools that Docker Engine is modularized into
 
 
-* **Container runtime specification** : TO-DO
+<p align="center">
+  <img src="images/docker_arch.png" width="400" height="300" />
+</p>
 
-* **containerd** : TO-DO
 
-* **runc** : It is a CLI tool for spawning and running containers according to something called as the OCI specification. It has a single purpose in life and that is to create containers. containerd provides runc with a valid OCI bundle for runc to make a container of
+* **Docker Client** : Whatever commands we type into the docker client get converted into an API payload and given to the docker daemon
 
+* **Docker daemon** : It is responsible for communication with containerd. 
+
+* **containerd** : containerd acts as a container supervisor, it is basically responsible for the container lifecycle ie to start, stop or pause and unpause a container. **It is only interested in lifecycle operations**.
+
+* **runc** : It is a CLI tool for spawning and running containers according to something called as the OCI specification. **It has a single purpose in life and that is to create containers**. containerd provides runc with a valid OCI bundle for runc to make a container of
+
+## Process of container creation
+
+a) The docker client receives the command `docker run -d hello-world:latest` and converts it into a API Payload and sends a POST call to the docker daemon
+
+b) The docker daemon receives the command and tells `containerd` to create the container.
+
+c) Now remember `containerd` cannot create a container. So it converts it into an appropriate OCI bundle and sends it to runc. 
+
+d) `runc` then pulls in all the required kernel objects like namespaces and cgroups and spins up the container.
+
+# Docker Application 
+
+The next section aims to focus on only the applications of docker and its various commands. 
 
 # Docker networking
 
@@ -63,9 +83,10 @@ By default, when you create or run a container using docker create or docker run
 
 * `docker run -it -p 8080:80` : This command assigns the exposed port 8080 on the container to the port 80 on the host machine. 
 
-* `docker run -it --network=host image_name` : This command exposes all of the servies on `localhost`.
+* `docker run -it --network=host image_name` : This command exposes all of the services on `localhost`.
 
 * `docker run -it --network=none image_name` : This command choses the `none` network ie no network is chosen.
+
 
 # Storage in Docker
 
@@ -83,6 +104,7 @@ Let us look at each of these options in depth and when would be the best case at
 ### Bindmounts 
 
 A bind mount is a file or folder stored anywhere on the container host filesystem, mounted into a running container.
+**Alert** : Bindmounts are managed by the user and not docker.
 
 
 ### Volumes
@@ -92,11 +114,27 @@ A bind mount is a file or folder stored anywhere on the container host filesyste
 * Attach volume to containers
 * On deleting container volume does not delete
 
+You can check the volumes using `docker volume ls`
+
+
+# Tags
+
+In simple words, Docker tags convey useful information about a specific image version/variant. Tags are used to mark images with a particular value so that we can identify versions of images and use them accordingly. By default docker uses the `latest` tag. 
+
+For example:
+
+`docker build -t "demo ."`: This would tag the image demo as `latest`. (default behaviour)
+
+`docker tag image_name tag`: This command tags the image with the tag.
+
+`docker tage image:latest image:v3` : This command tags the image 
+
+
+# Docker Compose
+
+
 
 TO-DO
 
 a) Complete the architecture deep dive
 
-b) Complete the storage commands
-
-c) Tagging and other docker nuances
