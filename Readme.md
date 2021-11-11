@@ -29,6 +29,26 @@ c) Now remember `containerd` cannot create a container. So it converts it into a
 
 d) `runc` then pulls in all the required kernel objects like namespaces and cgroups and spins up the container.
 
+<p align="center">
+  <img src="images/docker_process.png" width="400" height="300" />
+</p>
+
+
+# Docker images
+
+Docker images are like `build-time constructs` whereas containers are like `runtime constructs`.
+
+<p align="center">
+  <img src="images/docker_images.png" width="400" height="300" />
+</p>
+
+An image usually contains only the necessary OS related components to run and relies on the host kernel to run. 
+A newly installed docker host does not contain any local image repositories. The local image repository on a Linux-based Docker host is usually located at
+`/var/lib/docker/<storage-driver>`. On Windows-based Docker hosts this is `C:\ProgramData\docker\windowsfilter`
+
+
+
+
 # Docker Application 
 
 The next section aims to focus on only the applications of docker and its various commands. 
